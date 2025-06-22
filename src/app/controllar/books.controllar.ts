@@ -78,7 +78,7 @@ booksRoute.patch('/:bookId', async (req: Request, res: Response) => {
             data: updatedBook
         })
     } catch (error: any) {
-        console.log(error, "Error from get specific book by ID route");
+        console.log(error, "Error from update specific book by ID route");
         res.status(400).json({
             success: false,
             message: error.message,
@@ -87,3 +87,24 @@ booksRoute.patch('/:bookId', async (req: Request, res: Response) => {
     }
 })
 
+
+// Delete a specific book using by ID from the database
+booksRoute.delete('/:bookId', async (req: Request, res: Response) => {
+    try {
+        const bookId = req.params.bookId;
+        const deleteBook = await Books.findByIdAndDelete(bookId);
+
+        res.status(201).json({
+            success: true,
+            message: "Book deleted successfully",
+            data: null
+        })
+    } catch (error: any) {
+        console.log(error, "Error from delete a specific book route");
+        res.status(400).json({
+            success: false,
+            message: error.message,
+            error
+        })
+    }
+})
