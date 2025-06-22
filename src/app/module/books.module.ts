@@ -52,4 +52,4 @@ const booksSchema = new Schema<IBooks>(
 )
 
 
-const Books = model("Book", booksSchema);
+export const Books = model("Book", booksSchema);
