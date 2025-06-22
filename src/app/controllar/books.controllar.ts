@@ -22,3 +22,21 @@ booksRoute.post('/', async (req: Request, res: Response) => {
         })
     }
 })
+
+booksRoute.get('/', async (req: Request, res: Response) => {
+    try {
+        const books = await Books.find()
+        res.status(201).json({
+            success: true,
+            message: "Books retrieved successfully",
+            data: books
+        })
+    } catch (error: any) {
+        console.log(error, "Error from get all books route");
+        res.status(400).json({
+            success: false,
+            message: error.message,
+            error
+        })
+    }
+})
