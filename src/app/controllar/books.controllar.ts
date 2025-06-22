@@ -43,7 +43,7 @@ booksRoute.get('/', async (req: Request, res: Response) => {
     }
 })
 
-// Get Specific a book using by ID
+// Get a Specific book using by ID
 booksRoute.get('/:bookId', async (req: Request, res: Response) => {
     try {
         const bookId = req.params.bookId;
@@ -63,3 +63,27 @@ booksRoute.get('/:bookId', async (req: Request, res: Response) => {
         })
     }
 })
+
+
+// Update a Specific book any data using by ID
+booksRoute.patch('/:bookId', async (req: Request, res: Response) => {
+    try {
+        const bookId = req.params.bookId;
+        const updatedBody = req.body;
+        const updatedBook = await Books.findByIdAndUpdate(bookId, updatedBody, { new: true })
+
+        res.status(201).json({
+            success: true,
+            message: "Book updated successfully",
+            data: updatedBook
+        })
+    } catch (error: any) {
+        console.log(error, "Error from get specific book by ID route");
+        res.status(400).json({
+            success: false,
+            message: error.message,
+            error
+        })
+    }
+})
+
