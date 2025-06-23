@@ -1,11 +1,13 @@
 import express, { Application, Request, Response } from 'express';
 import { booksRoute } from './app/controllar/books.controllar';
+import { borrowRoute } from './app/controllar/borrow.controllar';
 
 const app: Application = express();
 
 // Middleware
 app.use(express.json());
-app.use('/api/books', booksRoute)
+app.use('/api/books', booksRoute);
+app.use('/api/borrow', borrowRoute);
 
 // If any routes are not matched.
 app.use((req, res, next) => {
