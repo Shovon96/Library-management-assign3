@@ -3,6 +3,15 @@ import { Books } from '../module/books.module';
 
 export const booksRoute = express.Router();
 
+// Error Handle
+const handleError = (res: Response, error: any) => {
+    res.status(400).json({
+        success: false,
+        message: error.message || 'Something went wrong',
+        error: error
+    });
+};
+
 // Create a book
 booksRoute.post('/', async (req: Request, res: Response) => {
     try {
@@ -16,11 +25,7 @@ booksRoute.post('/', async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         console.log(error, "Error from book post route");
-        res.status(400).json({
-            success: false,
-            message: error.message,
-            error
-        })
+        handleError(res, error)
     }
 })
 
@@ -35,11 +40,7 @@ booksRoute.get('/', async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         console.log(error, "Error from get all books route");
-        res.status(400).json({
-            success: false,
-            message: error.message,
-            error
-        })
+        handleError(res, error)
     }
 })
 
@@ -56,11 +57,7 @@ booksRoute.get('/:bookId', async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         console.log(error, "Error from get specific book by ID route");
-        res.status(400).json({
-            success: false,
-            message: error.message,
-            error
-        })
+        handleError(res, error)
     }
 })
 
@@ -70,20 +67,26 @@ booksRoute.patch('/:bookId', async (req: Request, res: Response) => {
     try {
         const bookId = req.params.bookId;
         const updatedBody = req.body;
-        const updatedBook = await Books.findByIdAndUpdate(bookId, updatedBody, { new: true })
+        const copiesNumber = updatedBody.copies;
 
-        res.status(201).json({
-            success: true,
-            message: "Book updated successfully",
-            data: updatedBook
-        })
+        if (copiesNumber > 0) {
+            const updatedBook = await Books.findByIdAndUpdate(bookId, updatedBody, { new: true })
+            res.status(201).json({
+                success: true,
+                message: "Book updated successfully",
+                data: updatedBook
+            })
+        } else {
+            res.status(400).json({
+                success: false,
+                message: "Not allowed the negative numbers",
+                data: copiesNumber
+            })
+        }
+
     } catch (error: any) {
         console.log(error, "Error from update specific book by ID route");
-        res.status(400).json({
-            success: false,
-            message: error.message,
-            error
-        })
+        handleError(res, error)
     }
 })
 
@@ -101,10 +104,6 @@ booksRoute.delete('/:bookId', async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         console.log(error, "Error from delete a specific book route");
-        res.status(400).json({
-            success: false,
-            message: error.message,
-            error
-        })
+        handleError(res, error)
     }
 })
