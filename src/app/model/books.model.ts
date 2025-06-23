@@ -51,7 +51,26 @@ const booksSchema = new Schema<IBooks>(
     }
 )
 
-// // Instance Method
+// Pre-save middleware: title & author trim
+booksSchema.pre('save', function (next) {
+    this.title = this.title.trim();
+    if (this.author) {
+        this.author = this.author.trim();
+    }
+
+    // Update available
+    this.available = this.copies > 0;
+
+    console.log('Pre-save: book data cleaned & availability set');
+    next();
+});
+
+// Post-save middleware: for book creation
+booksSchema.post('save', function (doc) {
+    console.log(`${doc.title} Book  saved successfully in ${doc.genre} gener`);
+});
+
+// Static Method for check availablity
 interface BookModel extends Model<IBooks> {
     updateAvailability(bookId: string): Promise<void>;
 }
