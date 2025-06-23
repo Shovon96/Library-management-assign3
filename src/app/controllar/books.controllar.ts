@@ -32,7 +32,24 @@ booksRoute.post('/', async (req: Request, res: Response) => {
 // Get all the books
 booksRoute.get('/', async (req: Request, res: Response) => {
     try {
-        const books = await Books.find()
+
+        // Queries
+        const filter = req.query.filter as string;
+        const sortBy = (req.query.sortBy as string) || 'createdAt';
+        const sort = (req.query.sort as string) === 'asc' ? 1 : -1;
+        const limit = parseInt(req.query.limit as string) || 10;
+
+        // Filter
+        const query: any = {};
+        if (filter) {
+            query.genre = filter.toUpperCase();
+        }
+
+        // sort and limit
+        const books = await Books.find(query)
+            .sort({ [sortBy]: sort })
+            .limit(limit);
+
         res.status(201).json({
             success: true,
             message: "Books retrieved successfully",
