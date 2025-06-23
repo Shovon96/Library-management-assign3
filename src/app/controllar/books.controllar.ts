@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { Books } from '../module/books.module';
+import { Books } from '../model/books.model';
 
 export const booksRoute = express.Router();
 
