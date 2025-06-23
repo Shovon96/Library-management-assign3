@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { Model, model, Schema } from "mongoose";
 import { IBooks } from "../interface/books.interface";
 
 const booksSchema = new Schema<IBooks>(
@@ -51,5 +51,17 @@ const booksSchema = new Schema<IBooks>(
     }
 )
 
+// // Instance Method
+interface BookModel extends Model<IBooks> {
+    updateAvailability(bookId: string): Promise<void>;
+}
 
-export const Books = model("Book", booksSchema);
+booksSchema.statics.updateAvailability = async function (bookId: string) {
+    const book = await this.findById(bookId);
+    if (book && book.copies === 0) {
+        book.available = false;
+        await book.save();
+    }
+};
+
+export const Books = model<IBooks, BookModel>('Book', booksSchema);
