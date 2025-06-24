@@ -39,7 +39,7 @@ booksRoute.post('/', async (req: Request, res: Response) => {
             data: book
         })
     } catch (error: any) {
-        console.log(error, "Error from book post route");
+        console.log("Error from book post route", error);
         handleError(res, error)
     }
 })
@@ -71,7 +71,7 @@ booksRoute.get('/', async (req: Request, res: Response) => {
             data: books
         })
     } catch (error: any) {
-        console.log(error, "Error from get all books route");
+        console.log("Error from get all books route", error);
         handleError(res, error)
     }
 })
@@ -88,7 +88,7 @@ booksRoute.get('/:bookId', async (req: Request, res: Response) => {
             data: book
         })
     } catch (error: any) {
-        console.log(error, "Error from get specific book by ID route");
+        console.log("Error from get specific book by ID route", error);
         handleError(res, error)
     }
 })
@@ -120,7 +120,7 @@ booksRoute.patch('/:bookId', async (req: Request, res: Response) => {
         }
 
     } catch (error: any) {
-        console.log(error, "Error from update specific book by ID route");
+        console.log("Error from update specific book by ID route", error);
         handleError(res, error)
     }
 })
@@ -138,7 +138,7 @@ booksRoute.delete('/:bookId', async (req: Request, res: Response) => {
             data: null
         })
     } catch (error: any) {
-        console.log(error, "Error from delete a specific book route");
+        console.log("Error from delete a specific book route", error);
         handleError(res, error)
     }
 })
