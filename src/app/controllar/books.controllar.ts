@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
-import { Books } from '../model/books.model';
 import { z } from 'zod';
+import { Books } from '../model/books.model';
+import { handleError } from '../utilities/handle.error';
 
 export const booksRoute = express.Router();
 
@@ -15,17 +16,15 @@ const booksZodSchema = z.object({
     available: z.boolean().optional()
 })
 
-// For 'PATCH' route: update any field using by partial()
-const updateBookZodSchema = booksZodSchema.partial();
-
 // Error Handle
-const handleError = (res: Response, error: any) => {
-    res.status(400).json({
-        success: false,
-        message: error.message || 'Something went wrong',
-        error: error
-    });
-};
+// const handleError = (res: Response, error: any) => {
+//     res.status(400).json({
+//         success: false,
+//         message: error.message || 'Something went wrong',
+//         error: error
+//     });
+// };
+
 
 // Create a book
 booksRoute.post('/', async (req: Request, res: Response) => {
@@ -96,6 +95,9 @@ booksRoute.get('/:bookId', async (req: Request, res: Response) => {
 
 
 // Update a Specific book any data using by ID
+
+// For 'PATCH' route: update any field using by partial()
+const updateBookZodSchema = booksZodSchema.partial();
 booksRoute.patch('/:bookId', async (req: Request, res: Response) => {
     try {
         const bookId = req.params.bookId;

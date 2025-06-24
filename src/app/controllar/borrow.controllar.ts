@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express'
+import { z } from 'zod';
 import { Books } from '../model/books.model';
 import { Borrow } from '../model/borrow.model';
-import { z } from 'zod';
+import { handleError } from '../utilities/handle.error';
 
 export const borrowRoute = express.Router();
 
@@ -56,11 +57,7 @@ borrowRoute.post('/', async (req: Request, res: Response) => {
 
     } catch (error: any) {
         console.log("Error from borrow post route:", error);
-        res.status(500).json({
-            success: false,
-            message: error.message,
-            error: error
-        });
+        handleError(res, error)
     }
 });
 
@@ -111,10 +108,6 @@ borrowRoute.get('/', async (req: Request, res: Response) => {
 
     } catch (error: any) {
         console.log("Error from borrow get route:", error);
-        res.status(500).json({
-            success: false,
-            message: error.message,
-            error: error
-        });
+        handleError(res, error)
     }
 })
