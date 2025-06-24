@@ -1,7 +1,22 @@
 import express, { Request, Response } from 'express'
 import { Books } from '../model/books.model';
+import { z } from 'zod';
 
 export const booksRoute = express.Router();
+
+// Book fields Zod validation
+const booksZodSchema = z.object({
+    title: z.string(),
+    author: z.string(),
+    genre: z.string(),
+    isbn: z.string(),
+    description: z.string().optional(),
+    copies: z.number(),
+    available: z.boolean().optional()
+})
+
+// For 'PATCH' route: update any field using by partial()
+const updateBookZodSchema = booksZodSchema.partial();
 
 // Error Handle
 const handleError = (res: Response, error: any) => {
@@ -15,7 +30,8 @@ const handleError = (res: Response, error: any) => {
 // Create a book
 booksRoute.post('/', async (req: Request, res: Response) => {
     try {
-        const body = req.body;
+        // const body = req.body;
+        const body = await booksZodSchema.parseAsync(req.body);
         const book = await Books.create(body);
 
         res.status(201).json({
@@ -83,10 +99,10 @@ booksRoute.get('/:bookId', async (req: Request, res: Response) => {
 booksRoute.patch('/:bookId', async (req: Request, res: Response) => {
     try {
         const bookId = req.params.bookId;
-        const updatedBody = req.body;
+        const updatedBody = await updateBookZodSchema.parseAsync(req.body);
         const copiesNumber = updatedBody.copies;
 
-        if (copiesNumber > 0) {
+        if (copiesNumber === undefined || copiesNumber > 0) {
             const updatedBook = await Books.findByIdAndUpdate(bookId, updatedBody, { new: true })
             res.status(201).json({
                 success: true,

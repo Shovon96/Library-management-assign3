@@ -1,14 +1,24 @@
 import express, { Request, Response } from 'express'
 import { Books } from '../model/books.model';
 import { Borrow } from '../model/borrow.model';
+import { z } from 'zod';
 
 export const borrowRoute = express.Router();
+
+// Borrow fields zod validation
+const borrowZodSchema = z.object({
+    book: z.string(),
+    quantity: z.number(),
+    dueDate: z.string().refine(val => !isNaN(Date.parse(val)), {
+        message: "Invalid due date format"
+    })
+})
 
 // POST a borrow
 borrowRoute.post('/', async (req: Request, res: Response) => {
 
     try {
-        const { book, quantity, dueDate } = req.body;
+        const { book, quantity, dueDate } = await borrowZodSchema.parseAsync(req.body);;
 
         // Find the book
         const findBook: any = await Books.findById(book);
