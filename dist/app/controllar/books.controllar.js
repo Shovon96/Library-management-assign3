@@ -98,14 +98,12 @@ exports.booksRoute.get('/:bookId', (req, res) => __awaiter(void 0, void 0, void 
     }
 }));
 // Update a Specific book any data using by ID
-// For 'PATCH' route: update any field using by partial()
-const updateBookZodSchema = booksZodSchema.partial();
-exports.booksRoute.patch('/:bookId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.booksRoute.put('/:bookId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const bookId = req.params.bookId;
-        const updatedBody = yield updateBookZodSchema.parseAsync(req.body);
+        const updatedBody = yield booksZodSchema.parseAsync(req.body);
         const copiesNumber = updatedBody.copies;
-        if (copiesNumber === undefined || copiesNumber > 0) {
+        if (copiesNumber > 0) {
             const updatedBook = yield books_model_1.Books.findByIdAndUpdate(bookId, updatedBody, { new: true });
             res.status(201).json({
                 success: true,

@@ -96,15 +96,13 @@ booksRoute.get('/:bookId', async (req: Request, res: Response) => {
 
 // Update a Specific book any data using by ID
 
-// For 'PATCH' route: update any field using by partial()
-const updateBookZodSchema = booksZodSchema.partial();
-booksRoute.patch('/:bookId', async (req: Request, res: Response) => {
+booksRoute.put('/:bookId', async (req: Request, res: Response) => {
     try {
         const bookId = req.params.bookId;
-        const updatedBody = await updateBookZodSchema.parseAsync(req.body);
+        const updatedBody = await booksZodSchema.parseAsync(req.body);
         const copiesNumber = updatedBody.copies;
 
-        if (copiesNumber === undefined || copiesNumber > 0) {
+        if (copiesNumber > 0) {
             const updatedBook = await Books.findByIdAndUpdate(bookId, updatedBody, { new: true })
             res.status(201).json({
                 success: true,
