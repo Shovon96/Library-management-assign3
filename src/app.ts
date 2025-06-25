@@ -6,8 +6,14 @@ const app: Application = express();
 
 // Middleware
 app.use(express.json());
+
+// Routes
 app.use('/api/books', booksRoute);
 app.use('/api/borrow', borrowRoute);
+
+app.get('/', (req: Request, res: Response) => {
+    res.send("Wellcome to the Library Management Server.");
+})
 
 // If any routes are not matched.
 app.use((req, res, next) => {
@@ -16,9 +22,5 @@ app.use((req, res, next) => {
         message: 'API route not found',
     });
 });
-
-app.get('/', (req: Request, res: Response) => {
-    res.send("Wellcome to the Library");
-})
 
 export default app;

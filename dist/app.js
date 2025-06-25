@@ -9,16 +9,17 @@ const borrow_controllar_1 = require("./app/controllar/borrow.controllar");
 const app = (0, express_1.default)();
 // Middleware
 app.use(express_1.default.json());
+// Routes
 app.use('/api/books', books_controllar_1.booksRoute);
 app.use('/api/borrow', borrow_controllar_1.borrowRoute);
+app.get('/', (req, res) => {
+    res.send("Wellcome to the Library Management Server.");
+});
 // If any routes are not matched.
 app.use((req, res, next) => {
     res.status(404).json({
         success: false,
         message: 'API route not found',
     });
-});
-app.get('/', (req, res) => {
-    res.send("Wellcome to the Library");
 });
 exports.default = app;
