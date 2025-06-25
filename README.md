@@ -82,13 +82,9 @@ Shows an error if not found.
 ### 1. Create a Borrow: `POST /api/borrow`
 
 - Creates a borrow record for a specific book.
-
 - Validates the request using a `Zod` schema.
-
 - Ensures sufficient book copies are available before borrowing.
-
 - Automatically reduces the book's available copies.
-
 - If copies become zero, sets the book’s availability to false.
 
 ---
@@ -96,16 +92,14 @@ Shows an error if not found.
 ### 2. Get Borrow Summary: `GET /api/borrow`
 
 - Returns a summary of all borrowed books.
-
 - Uses MongoDB aggregation to group borrowed quantities by book title.
-
 - Joins book details via `$lookup` and displays total quantity borrowed per book.
 
 ---
 
 ## ⚠️ Fallback Route
 
-* (Any unmatched route)
+  (Any unmatched route)
 - Catches all undefined routes.
 - Returns a 404 response with a standard JSON error message.
 
